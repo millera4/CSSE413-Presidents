@@ -9,6 +9,7 @@ class MyHTMLParser(HTMLParser):
     def __init__(self, data=''):
         HTMLParser.__init__(self)
         self.isPrinting = False
+        self.endOfContent = False
         self.rawData = data
         
         self.words = util.Counter()
@@ -22,6 +23,7 @@ class MyHTMLParser(HTMLParser):
             
         if ('id', 'External_links') in attrs:
             # print "END OF CONTENT"
+            self.endOfContent = True
             self.isPrinting = False
 
         # Do we only care about things in <p> tags?
@@ -39,12 +41,13 @@ class MyHTMLParser(HTMLParser):
             
     def handle_data(self, data):
         # Hardcoding so much stuff
-        data = data.rstrip()
+        data = data.rstrip().lower()
         if data == '[':
             # Don't print the references [1]
             self.isPrinting = False
         elif data == ']':
-            self.isPrinting = True         
+            if not self.endOfContent:
+                self.isPrinting = True         
         elif self.isPrinting and data != '':            
             # validCharFn basically removes "double quote" characters, punctuation marks '.,:;', and dashes
             # (but keeps contractions -> don't I'm aren't)
@@ -60,7 +63,7 @@ class MyHTMLParser(HTMLParser):
 def main():
     print os.getcwd()
     for fileName in os.listdir(os.getcwd() + '\unparsed'):
-        # if fileName != 'Obama.txt': continue  # Testing
+        # if fileName != 'BenjaminHarrison.txt': continue  # Testing
         print fileName
         try:      
             # Parsing 
