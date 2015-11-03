@@ -1,10 +1,5 @@
 import json, util, os, math
 
-# Global variables
-documents = [] 	# array holding document objects
-N = 44 			# number of documents (number of presidents)
-avgdl = -1 		# average document length (initialized on getDocuments)
-
 class Document():
 	# Class representing document D
 	def __init__(self, fileName):
@@ -21,32 +16,24 @@ class Document():
 
 def getDocuments():
 	# Parse all files and create Document objects
-	if documents:
-		return documents # if computed, don't parse again
-	
+	documents = []
 	for fileName in os.listdir(os.getcwd() + '\parsed'):
 		documents.append(Document(fileName))
 		
-	avgdl = sum(d.length() for d in documents) / N
 	
 	return documents
 	
-def IDF(word):
-	# Compute IDF of word in all documents
-	if not documents:
-		documents = getDocuments()
-		
-	n_q = num_containing(word)
+def IDF(documents, word):
+	# Compute IDF of word in all documents	
+	N = len(documents)
+	n_q = num_containing(documents, word)
 	return math.log( (N - n_q + 0.5) / (n_q + 0.5) )
 				
-def avgdl():
+def avgdl(documents):
 	# Average length of all documents
-	if not documents:
-		documents = getDocuments()
+	return sum(d.length() for d in documents) / len(documents)
 		
-	return avgdl
-		
-def num_containing(word):
+def num_containing(documents, word):
 	# Number of documents containing words
 	count = 0
 	for doc in documents:
