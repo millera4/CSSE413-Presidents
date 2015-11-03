@@ -19,7 +19,7 @@ def score_documents(query):
 	mb25 = bm25Score(query)
 	return sorted(mb25)
 	# return mb25
-
+	
 def bm25Score(query):
 	output = []
 	k = 1
@@ -28,10 +28,11 @@ def bm25Score(query):
 	for doc in documents:
 		score = 0
 		for searchTerm in query.split():
+			print(searchTerm)
 			IDF = document.IDF(documents, searchTerm)
 			top = doc.freq(searchTerm)*(k+1)
 			bot = doc.freq(searchTerm)+k*(1-b+b*doc.length()/document.avgdl(documents))
-			score+= IDF * top / bot
+			score+= 1.0*IDF * top / bot
 		output.append((score, doc.fileName))
 	return output
 		
