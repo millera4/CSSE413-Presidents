@@ -2,10 +2,11 @@ from HTMLParser import HTMLParser
 from bs4 import BeautifulSoup
 import os, string, util
 from htmlentitydefs import name2codepoint
+import json
 
 
 class MyHTMLParser(HTMLParser):
-    def __init__(self, data):
+    def __init__(self, data=''):
         HTMLParser.__init__(self)
         self.isPrinting = False
         self.rawData = data
@@ -27,8 +28,8 @@ class MyHTMLParser(HTMLParser):
         # That is all the paragraphs of "content"
         # (no tables, captions, images, lists)
         
-    def handle_endtag(self, tag):
-        if tag == 'html':
+    # def handle_endtag(self, tag):
+        # if tag == 'html':
             # print "End of document"
             # print "Total words:", self.words.totalCount()
             
@@ -60,11 +61,13 @@ for fileName in os.listdir(os.getcwd() + '\unparsed'):
     # if fileName != 'Obama.txt': continue  # Testing
     print fileName
     try:      
-        ### HTMLParsing
+        # Parsing 
         data = open('unparsed/' + fileName).read()
         data = filter(lambda x: x in string.printable, data)
         parser = MyHTMLParser(data)
         
+        f = open('parsed/' + fileName, 'w')
+        json.dump(parser.words, f)
         
     except Exception as e:
         print "Could not parse file:", e

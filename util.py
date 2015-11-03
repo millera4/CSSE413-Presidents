@@ -56,6 +56,23 @@ class Counter(dict):
   subtracted or multiplied together.  See below for details.  They can
   also be normalized and their total count and arg max can be extracted.
   """
+  # New constructor to create from a pre-made dict
+  def __init__(self, d = {}):
+    dict.__init__(self)
+    
+    for key in d:
+      self[key] = d[key]
+  
+  def __eq__(self, y):
+    if len(self) != len(y):
+      return False
+      
+    for x, y in zip(sorted(self), sorted(y)):
+      if x != y:
+        return False
+        
+    return True
+  
   def __getitem__(self, idx):
     self.setdefault(idx, 0)
     return dict.__getitem__(self, idx)
