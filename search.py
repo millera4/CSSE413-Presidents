@@ -17,14 +17,9 @@ def main():
 	
 def score_documents(query):
 	mb25 = bm25Score(query)
-<<<<<<< HEAD
-	#sorted(mb25)
-	return mb25
-=======
 	return sorted(mb25)
 	# return mb25
->>>>>>> e9450a7451a4a4550ed80636f1d706a7d7f035c5
-
+	
 def bm25Score(query):
 	output = []
 	k = 1
