@@ -48,27 +48,32 @@ class MyHTMLParser(HTMLParser):
         elif self.isPrinting and data != '':            
             # validCharFn basically removes "double quote" characters, punctuation marks '.,:;', and dashes
             # (but keeps contractions -> don't I'm aren't)
-            validCharFn = lambda x: x in string.letters or x in string.digits or x in string.whitespace or x == '\''
+            validCharFn = lambda x: x in string.letters or x in string.digits or x in string.whitespace or x == '\'' or x == '-'
             data = filter(validCharFn, data)
             data = data.split()
             
             for w in data:
                 self.words[w] += 1
+                
 
 # Test code
-print os.getcwd()
-for fileName in os.listdir(os.getcwd() + '\unparsed'):
-    # if fileName != 'Obama.txt': continue  # Testing
-    print fileName
-    try:      
-        # Parsing 
-        data = open('unparsed/' + fileName).read()
-        data = filter(lambda x: x in string.printable, data)
-        parser = MyHTMLParser(data)
-        
-        f = open('parsed/' + fileName, 'w')
-        json.dump(parser.words, f)
-        
-    except Exception as e:
-        print "Could not parse file:", e
-        print type(e)
+def main():
+    print os.getcwd()
+    for fileName in os.listdir(os.getcwd() + '\unparsed'):
+        # if fileName != 'Obama.txt': continue  # Testing
+        print fileName
+        try:      
+            # Parsing 
+            data = open('unparsed/' + fileName).read()
+            data = filter(lambda x: x in string.printable, data)
+            parser = MyHTMLParser(data)
+            
+            f = open('parsed/' + fileName, 'w')
+            json.dump(parser.words, f)
+            
+        except Exception as e:
+            print "Could not parse file:", e
+            print type(e)
+            
+if __name__ == "__main__":
+    main()
