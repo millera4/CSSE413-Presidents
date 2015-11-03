@@ -3,9 +3,10 @@ import document
 
 
 def main():
-	query = ""
-	while query != "quit":
+	while True:
 		query = raw_input("Please enter search query (\"quit\" to quit): ")
+		if query == 'quit':
+			return
 		
 		results = score_documents(query)
 		
@@ -16,8 +17,8 @@ def main():
 	
 def score_documents(query):
 	mb25 = bm25Score(query)
-	sorted(mb25)
-	return mb25
+	return sorted(mb25)
+	# return mb25
 
 def bm25Score(query):
 	output = []

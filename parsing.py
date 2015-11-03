@@ -20,7 +20,7 @@ class MyHTMLParser(HTMLParser):
             # print "PARSING CONTENT"
             self.isPrinting = True
             
-        if ('class', 'printfooter') in attrs:
+        if ('id', 'External_links') in attrs:
             # print "END OF CONTENT"
             self.isPrinting = False
 
