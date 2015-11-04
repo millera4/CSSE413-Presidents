@@ -19,10 +19,9 @@ def score_documents(query):
 	mb25 = bm25Score(query)
 	title = titleScore(query)
 	merged = []
-	for i in range(0,length(mb25)):
-		merged.append((mb25[i][0]+title[i][0],mb25[i]))
-	return sorted(mb25)
-	# return mb25
+	for i in range(0,len(mb25)):
+		merged.append((mb25[i][0]+title[i][0],mb25[i][1]))
+	return sorted(merged)
 	
 def bm25Score(query):
 	output = []
@@ -49,8 +48,8 @@ def titleScore(query):
 			for heading in doc.headers:
 				for word in heading:
 					if(word==searchTerm):
-						count+=document.IDF(documents, searchTerm)
-		output.append((score,document.fileName))
+						score+=document.IDF(documents, searchTerm)
+		output.append((score,doc.fileName))
 	return output
 
 if __name__ == "__main__":
