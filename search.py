@@ -10,8 +10,11 @@ def main():
 		
 		results = score_documents(query)
 		
-		for r in results:
-			print r # Print Name, Confidence (sorted order)
+		for i in range(10): # Print top 10 results
+			print results[i] # Print Name, Confidence (sorted order)
+			
+		# for r in results: # Print all results
+		# 	print r
 			
 		print "\n"
 	
@@ -22,7 +25,7 @@ def score_documents(query):
 	merged = []
 	for i in range(0,len(mb25)):
 		merged.append((mb25[i][0]+title[i][0]+header[i][0],mb25[i][1]))
-	return sorted(merged)
+	return sorted(merged, reverse=True)
 	
 def bm25Score(query):
 	output = []
@@ -51,6 +54,7 @@ def headerScore(query):
 					if(word==searchTerm):
 						score+=document.IDF(documents, searchTerm)
 		output.append((score,doc.fileName))
+	return output
 		
 def titleScore(query):
 	output = []

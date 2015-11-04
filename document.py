@@ -27,9 +27,16 @@ def getDocuments():
 	
 def IDF(documents, word):
 	# Compute IDF of word in all documents	
+	EPSILON = math.e # Constant to force IDF to be positive
+	# Constant needed because our sample size is small
+	# Any word that occurs in more than half the documents has a 
+	# negative IDF (such as "Bush").  By default, this gives a negative 
+	# score to a document that DOES include the search query
+	
 	N = len(documents)
 	n_q = num_containing(documents, word)
-	return math.log( (N - n_q + 0.5) / (n_q + 0.5) )
+
+	return math.log( EPSILON + (N - n_q + 0.5) / (n_q + 0.5) )
 				
 def avgdl(documents):
 	# Average length of all documents
