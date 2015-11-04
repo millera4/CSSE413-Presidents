@@ -1,6 +1,4 @@
-import document
-
-
+import document, util
 
 def main():
 	while True:
@@ -8,6 +6,8 @@ def main():
 		if query == 'quit':
 			return
 		
+		# Remove bad search characters like punctuation
+		query = filter(util.validSearchChar, query)
 		results = score_documents(query)
 		
 		for i in range(10): # Print top 10 results

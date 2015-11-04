@@ -8,7 +8,14 @@
 
 ##### Trimmed util file copied Pac-Man project code
 
-import random
+import random, string
+
+def validSearchChar(x):
+  return x in string.letters or    \
+         x in string.digits or     \
+         x in string.whitespace or \
+         x == '\'' or              \
+         x == '-'
 
 """
   Data structures and functions useful for various course projects

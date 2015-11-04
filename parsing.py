@@ -72,8 +72,7 @@ class MyHTMLParser(HTMLParser):
         elif self.isPrinting and data != '':            
             # validCharFn basically removes "double quote" characters, punctuation marks '.,:;', and dashes
             # (but keeps contractions -> don't I'm aren't)
-            validCharFn = lambda x: x in string.letters or x in string.digits or x in string.whitespace or x == '\'' or x == '-'
-            data = filter(validCharFn, data)
+            data = filter(util.validSearchChar, data)
             data = data.split()
             
             for w in data:
