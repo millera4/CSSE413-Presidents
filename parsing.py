@@ -38,30 +38,16 @@ class MyHTMLParser(HTMLParser):
             # Title of document
             self.isPrinting = True
             self.isTitle = True
-            
-
-        # Do we only care about things in <p> tags?
-        # That is all the paragraphs of "content"
-        # (no tables, captions, images, lists)
-        
-    def handle_endtag(self, tag):
-        # if tag == 'html':
-        #     print "End of document"
-        #     print "Total words:", self.words.totalCount()
-            
-        #     # Further processing?
-        
+              
+    def handle_endtag(self, tag):       
         if tag == 'h2' or tag == 'h3' or tag == 'h4':
             self.isHeader = False
         
         if tag == 'h1':
             self.isPrinting = False
             self.isTitle = False
-
-            
-            
+ 
     def handle_data(self, data):
-        # Hardcoding so much stuff
         data = data.rstrip().lower()
         if data == '[':
             # Don't print the references [1]
@@ -96,6 +82,7 @@ def main():
             data = filter(lambda x: x in string.printable, data)
             parser = MyHTMLParser(data)
             
+            # Saving parsed data
             f = open('parsed/' + fileName, 'w')
             parsed_data = { 'words': parser.words, 'headers': parser.headers , 'title': parser.title }
             json.dump(parsed_data, f)

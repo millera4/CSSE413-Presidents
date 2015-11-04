@@ -21,7 +21,6 @@ def getDocuments():
 	documents = []
 	for fileName in os.listdir(os.getcwd() + '\parsed'):
 		documents.append(Document(fileName))
-		
 	
 	return documents
 	
