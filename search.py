@@ -17,6 +17,10 @@ def main():
 	
 def score_documents(query):
 	mb25 = bm25Score(query)
+	title = titleScore(query)
+	merged = []
+	for i in range(0,length(mb25)):
+		merged.append((mb25[i][0]+title[i][0],mb25[i]))
 	return sorted(mb25)
 	# return mb25
 	
@@ -28,14 +32,26 @@ def bm25Score(query):
 	for doc in documents:
 		score = 0
 		for searchTerm in query.split():
-			print(searchTerm)
 			IDF = document.IDF(documents, searchTerm)
 			top = doc.freq(searchTerm)*(k+1)
 			bot = doc.freq(searchTerm)+k*(1-b+b*doc.length()/document.avgdl(documents))
 			score+= 1.0*IDF * top / bot
 		output.append((score, doc.fileName))
 	return output
-		
+	
+def titleScore(query):
+	output = []
+	documents = document.getDocuments()
+	for doc in documents:
+		score = 0
+		headers = doc.headers
+		for searchTerm in query.split():
+			for heading in doc.headers:
+				for word in heading:
+					if(word==searchTerm):
+						count+=document.IDF(documents, searchTerm)
+		output.append((score,document.fileName))
+	return output
 
 if __name__ == "__main__":
 	main()
