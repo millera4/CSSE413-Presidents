@@ -6,7 +6,8 @@ class Document():
 		parsed_data = json.load(open('parsed/' + fileName))
 		
 		self.fileName = fileName
-		self.words = util.Counter(parsed_data)	
+		self.words = util.Counter(parsed_data['words'])	
+		self.headers = parsed_data['headers']
 		
 	def freq(self, word):
 		return self.words[word]
