@@ -4,7 +4,7 @@ import document
 
 def main():
 	while True:
-		query = raw_input("Please enter search query (\"quit\" to quit): ")
+		query = raw_input("Please enter search query (\"quit\" to quit): ").lower()
 		if query == 'quit':
 			return
 		
