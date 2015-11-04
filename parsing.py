@@ -10,9 +10,11 @@ class MyHTMLParser(HTMLParser):
         HTMLParser.__init__(self)
         self.isPrinting = False
         self.endOfContent = False
+        self.isHeader = False
         self.rawData = data
         
         self.words = util.Counter()
+        self.headers = []
         
         self.feed(data)
         
@@ -25,17 +27,23 @@ class MyHTMLParser(HTMLParser):
             # print "END OF CONTENT"
             self.endOfContent = True
             self.isPrinting = False
+            
+        if tag == 'h2' or tag == 'h3' or tag == 'h4':
+            self.isHeader = True
 
         # Do we only care about things in <p> tags?
         # That is all the paragraphs of "content"
         # (no tables, captions, images, lists)
         
-    # def handle_endtag(self, tag):
+    def handle_endtag(self, tag):
         # if tag == 'html':
-            # print "End of document"
-            # print "Total words:", self.words.totalCount()
+        #     print "End of document"
+        #     print "Total words:", self.words.totalCount()
             
-            # Further processing?
+        #     # Further processing?
+        
+        if tag == 'h2' or tag == 'h3' or tag == 'h4':
+            self.isHeader = False
 
             
             
@@ -58,6 +66,9 @@ class MyHTMLParser(HTMLParser):
             for w in data:
                 self.words[w] += 1
                 
+            if self.isHeader:
+                self.headers.append(data)
+                
 
 # Test code
 def main():
@@ -72,7 +83,8 @@ def main():
             parser = MyHTMLParser(data)
             
             f = open('parsed/' + fileName, 'w')
-            json.dump(parser.words, f)
+            parsed_data = { 'words': parser.words, 'headers': parser.headers }
+            json.dump(parsed_data, f)
             
         except Exception as e:
             print "Could not parse file:", e
