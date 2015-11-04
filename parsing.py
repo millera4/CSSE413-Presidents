@@ -11,10 +11,12 @@ class MyHTMLParser(HTMLParser):
         self.isPrinting = False
         self.endOfContent = False
         self.isHeader = False
+        self.isTitle = False
         self.rawData = data
         
         self.words = util.Counter()
         self.headers = []
+        self.title = []
         
         self.feed(data)
         
@@ -29,7 +31,14 @@ class MyHTMLParser(HTMLParser):
             self.isPrinting = False
             
         if tag == 'h2' or tag == 'h3' or tag == 'h4':
+            # Section headers
             self.isHeader = True
+            
+        if tag == 'h1':
+            # Title of document
+            self.isPrinting = True
+            self.isTitle = True
+            
 
         # Do we only care about things in <p> tags?
         # That is all the paragraphs of "content"
@@ -44,6 +53,10 @@ class MyHTMLParser(HTMLParser):
         
         if tag == 'h2' or tag == 'h3' or tag == 'h4':
             self.isHeader = False
+        
+        if tag == 'h1':
+            self.isPrinting = False
+            self.isTitle = False
 
             
             
@@ -69,12 +82,14 @@ class MyHTMLParser(HTMLParser):
             if self.isHeader:
                 self.headers.append(data)
                 
+            if self.isTitle:
+                self.title = data
 
 # Test code
 def main():
     print os.getcwd()
     for fileName in os.listdir(os.getcwd() + '\unparsed'):
-        # if fileName != 'BenjaminHarrison.txt': continue  # Testing
+        # if fileName != 'Wilson.txt': continue  # Testing
         print fileName
         try:      
             # Parsing 
@@ -83,7 +98,7 @@ def main():
             parser = MyHTMLParser(data)
             
             f = open('parsed/' + fileName, 'w')
-            parsed_data = { 'words': parser.words, 'headers': parser.headers }
+            parsed_data = { 'words': parser.words, 'headers': parser.headers , 'title': parser.title }
             json.dump(parsed_data, f)
             
         except Exception as e:

@@ -8,6 +8,7 @@ class Document():
 		self.fileName = fileName
 		self.words = util.Counter(parsed_data['words'])	
 		self.headers = parsed_data['headers']
+		self.title = parsed_data['title']
 		
 	def freq(self, word):
 		return self.words[word]
