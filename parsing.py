@@ -78,14 +78,20 @@ class MyHTMLParser(HTMLParser):
         self.title = data
             
     def parseParagraph(self):
-        data = nltk.word_tokenize(self.currentData)
-        words = [w for w in data if w.isalnum()]
-        skip_bigrams = list(skipgrams(words, 2, len(words)))
-        self.skipgrams = self.skipgrams + skip_bigrams
+        data = nltk.sent_tokenize(self.currentData)
+        for sentence in data:
+            words = nltk.word_tokenize(sentence)
+            words = [w for w in words if w.isalnum()]
+            skip_bigrams = list(skipgrams(words, 2, len(words)))
+            self.skipgrams = self.skipgrams + skip_bigrams
+            
+        #words = [w for w in data if w.isalnum()]
+        #skip_bigrams = list(skipgrams(words, 2, len(words) / 2))
+        #self.skipgrams = self.skipgrams + skip_bigrams
         
  
     def handle_data(self, data):
-        data = data.rstrip()  #.lower() - not ignore case anymore
+        data = data.rstrip().lower()
         if data == '[':
             # Don't print the references [1]
             self.isPrinting = False

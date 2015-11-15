@@ -22,7 +22,7 @@ def getDocuments():
 	documents = []
 	for fileName in os.listdir(os.getcwd() + '\parsed'):
 		print fileName
-		if fileName == 'Grant.txt': break # Testing
+		#if fileName == 'Grant.txt': break # Testing
 		documents.append(Document(fileName))
 	
 	return documents
