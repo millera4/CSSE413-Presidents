@@ -19,12 +19,18 @@ def main():
 		print "\n"
 	
 def score_documents(query):
+	scores = []
+	weights = [1,1,1]
 	mb25 = bm25Score(query)
-	title = titleScore(query)
-	header = headerScore(query)
+	scores.append(mb25)
+	scores.append(titleScore(query))
+	scores.append(headerScore(query))
 	merged = []
 	for i in range(0,len(mb25)):
-		merged.append((mb25[i][0]+title[i][0]+header[i][0],mb25[i][1]))
+		score = 0
+		for j in range(0,len(scores)):
+			score += weights[j]*scores[j][i][0]
+		merged.append((score,mb25[i][1]))
 	return sorted(merged, reverse=True)
 	
 def bm25Score(query):
@@ -52,7 +58,7 @@ def headerScore(query):
 			for heading in headers:
 				for word in heading:
 					if(word==searchTerm):
-						score+=document.IDF(documents, searchTerm)
+						score+=1 #document.IDF(documents, searchTerm)
 		output.append((score,doc.fileName))
 	return output
 		
