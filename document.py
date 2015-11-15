@@ -9,6 +9,7 @@ class Document():
 		self.words = util.Counter(parsed_data['words'])	
 		self.headers = parsed_data['headers']
 		self.title = parsed_data['title']
+		self.skipgrams = parsed_data['skipgrams']
 		
 	def freq(self, word):
 		return self.words[word]
