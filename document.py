@@ -21,7 +21,7 @@ def getDocuments():
 	# Parse all files and create Document objects
 	documents = []
 	for fileName in os.listdir(os.getcwd() + '\parsed'):
-		print fileName
+		#print fileName
 		#if fileName == 'Grant.txt': break # Testing
 		documents.append(Document(fileName))
 	
