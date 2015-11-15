@@ -3,6 +3,7 @@ import nltk.stem.porter
 from nltk.util import skipgrams
 
 stemmer = nltk.stem.porter.PorterStemmer()
+documents = document.getDocuments()
 #skipper= nltk.util.skipgrams()
 
 def main():
@@ -48,7 +49,6 @@ def bm25Score(query):
 	output = []
 	k = 1
 	b= 0.75
-	documents = document.getDocuments()
 	for doc in documents:
 		score = 0
 		for searchTerm in query:
@@ -61,7 +61,6 @@ def bm25Score(query):
 	
 def headerScore(query):
 	output = []
-	documents = document.getDocuments()
 	for doc in documents:
 		score = 0
 		headers = doc.headers
@@ -75,7 +74,6 @@ def headerScore(query):
 		
 def titleScore(query):
 	output = []
-	documents = document.getDocuments()
 	for doc in documents:
 		score = 0
 		title = doc.title
@@ -91,7 +89,6 @@ def skipScore(query):
 	skips = list(skips)
 	print skips
 	output = []
-	documents = document.getDocuments()
 	for doc in documents:
 		score=0
 		for gram in skips:
