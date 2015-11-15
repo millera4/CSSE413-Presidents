@@ -2,7 +2,7 @@ from HTMLParser import HTMLParser
 from bs4 import BeautifulSoup
 import os, string, util
 from htmlentitydefs import name2codepoint
-import json
+import json, nltk
 
 
 class MyHTMLParser(HTMLParser):
@@ -69,23 +69,59 @@ class MyHTMLParser(HTMLParser):
                 
             if self.isTitle:
                 self.title = data
+                
+class NLPParser():
+    def __init__(self, data=''):
+        self.sentences = []
+        self.sent_pos = []
+        
+        self.feed(data)
+        
+    def feed(self, data):
+        self.sentences = nltk.word_tokenize(data)
+        #self.send_pos = 
+        #line_num = 0
+        #for line in data.split():
+        #    print line
+        #    line = line.rstrip()
+        #    
+        #    if line == '':
+        #        #print "empty line found"
+        ##        continue    # Ignore empty line
+        #        
+        #    tokens = nltk.word_tokenize(line)
+        #    #tagged = nltk.pos_tag(tokens)
+        #    
+        #    self.sentences.append(tokens)
+        #    #self.sent_pos.append(tagged)
+        #    
+        #    if line_num % 500 == 0:
+        #        print "line: ", line_num
+        #    line_num += 1
+        
+        
+            
 
 # Test code
 def main():
     print os.getcwd()
     for fileName in os.listdir(os.getcwd() + '\unparsed'):
-        # if fileName != 'Wilson.txt': continue  # Testing
+        if fileName != 'Barack_Obama.txt': continue  # Testing
         print fileName
         try:      
             # Parsing 
             data = open('unparsed/' + fileName).read()
             data = filter(lambda x: x in string.printable, data)
-            parser = MyHTMLParser(data)
+            parser = NLPParser(data)
+            
+            f = open('parsed.txt', 'w')
+            parsed_data = { 'sentences': parser.sentences }
+            json.dump(parsed_data, f)
             
             # Saving parsed data
-            f = open('parsed/' + fileName, 'w')
-            parsed_data = { 'words': parser.words, 'headers': parser.headers , 'title': parser.title }
-            json.dump(parsed_data, f)
+            #f = open('parsed/' + fileName, 'w')
+            #parsed_data = { 'words': parser.words, 'headers': parser.headers , 'title': parser.title }
+            #json.dump(parsed_data, f)
             
         except Exception as e:
             print "Could not parse file:", e
