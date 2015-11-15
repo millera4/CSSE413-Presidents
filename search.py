@@ -87,13 +87,13 @@ def titleScore(query):
 def skipScore(query):
 	skips = skipgrams(query,2,len(query))
 	skips = list(skips)
-	print skips
 	output = []
 	for doc in documents:
 		score=0
+		
 		for gram in skips:
 			for g in doc.skipgrams:
-				if(g==gram):
+				if(g[0]==gram[0] and g[1]==gram[1]):
 					score+=1
 		output.append((score,doc.fileName))
 	return output
