@@ -1,4 +1,9 @@
 import document, util
+import nltk.stem.porter
+from nltk.util import skipgrams
+
+stemmer = nltk.stem.porter.PorterStemmer()
+#skipper= nltk.util.skipgrams()
 
 def main():
 	while True:
@@ -19,12 +24,24 @@ def main():
 		print "\n"
 	
 def score_documents(query):
-	mb25 = bm25Score(query)
-	title = titleScore(query)
-	header = headerScore(query)
+
+	query = query.split()
+	stemmedQuery = map(stemmer.stem, query)
+	
+	
+	scores = []
+	weights = [0,0,0,1]
+	mb25 = bm25Score(stemmedQuery)
+	scores.append(mb25)
+	scores.append(titleScore(stemmedQuery))
+	scores.append(headerScore(stemmedQuery))
+	scores.append(skipScore(query))
 	merged = []
 	for i in range(0,len(mb25)):
-		merged.append((mb25[i][0]+title[i][0]+header[i][0],mb25[i][1]))
+		score = 0
+		for j in range(0,len(scores)):
+			score += weights[j]*scores[j][i][0]
+		merged.append((score,mb25[i][1]))
 	return sorted(merged, reverse=True)
 	
 def bm25Score(query):
@@ -34,7 +51,7 @@ def bm25Score(query):
 	documents = document.getDocuments()
 	for doc in documents:
 		score = 0
-		for searchTerm in query.split():
+		for searchTerm in query:
 			IDF = document.IDF(documents, searchTerm)
 			top = doc.freq(searchTerm)*(k+1)
 			bot = doc.freq(searchTerm)+k*(1-b+b*doc.length()/document.avgdl(documents))
@@ -48,11 +65,11 @@ def headerScore(query):
 	for doc in documents:
 		score = 0
 		headers = doc.headers
-		for searchTerm in query.split():
+		for searchTerm in query:
 			for heading in headers:
 				for word in heading:
 					if(word==searchTerm):
-						score+=document.IDF(documents, searchTerm)
+						score+=1 #document.IDF(documents, searchTerm)
 		output.append((score,doc.fileName))
 	return output
 		
@@ -62,12 +79,27 @@ def titleScore(query):
 	for doc in documents:
 		score = 0
 		title = doc.title
-		for searchTerm in query.split():
+		for searchTerm in query:
 			for word in title:
 				if(word==searchTerm):
 					score+=10
 		output.append((score,doc.fileName))
 	return output
 
+def skipScore(query):
+	skips = skipgrams(query,2,len(query))
+	skips = list(skips)
+	print skips
+	output = []
+	documents = document.getDocuments()
+	for doc in documents:
+		score=0
+		for gram in skips:
+			for g in doc.skipgrams:
+				if(g==gram):
+					score+=1
+		output.append((score,doc.fileName))
+	return output
+	
 if __name__ == "__main__":
 	main()

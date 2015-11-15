@@ -36,7 +36,7 @@ def IDF(documents, word):
 	N = len(documents)
 	n_q = num_containing(documents, word)
 
-	return math.log( EPSILON + (N - n_q + 0.5) / (n_q + 0.5) )
+	return math.log( EPSILON + (N - n_q + 0.5) / (n_q + 0.5) )-1
 				
 def avgdl(documents):
 	# Average length of all documents
