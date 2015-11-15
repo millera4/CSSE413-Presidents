@@ -16,11 +16,11 @@ def main():
 		query = filter(util.validSearchChar, query)
 		results = score_documents(query)
 		
-		for i in range(10): # Print top 10 results
-			print results[i] # Print Name, Confidence (sorted order)
+		#for i in range(10): # Print top 10 results
+		#	print results[i] # Print Name, Confidence (sorted order)
 			
-		# for r in results: # Print all results
-		# 	print r
+		for r in results: # Print all results
+		 	print r
 			
 		print "\n"
 	
@@ -31,11 +31,11 @@ def score_documents(query):
 	
 	
 	scores = []
-	weights = [0,0,0,1]
+	weights = [10,1,1,0.01]
 	mb25 = bm25Score(stemmedQuery)
 	scores.append(mb25)
-	scores.append(titleScore(stemmedQuery))
-	scores.append(headerScore(stemmedQuery))
+	scores.append(titleScore(query))
+	scores.append(headerScore(query))
 	scores.append(skipScore(query))
 	merged = []
 	for i in range(0,len(mb25)):
@@ -61,14 +61,20 @@ def bm25Score(query):
 	
 def headerScore(query):
 	output = []
+	query = set(query)
 	for doc in documents:
 		score = 0
+		headerscore=0;
 		headers = doc.headers
-		for searchTerm in query:
-			for heading in headers:
+		for heading in headers:
+			headerscore=0;
+			for searchTerm in query:
 				for word in heading:
 					if(word==searchTerm):
-						score+=1 #document.IDF(documents, searchTerm)
+						headerscore+= 1#document.IDF(documents, searchTerm)
+			score = max(score, headerscore)
+		if(score>2):
+			score = score*2# good match
 		output.append((score,doc.fileName))
 	return output
 		
@@ -94,7 +100,7 @@ def skipScore(query):
 		for gram in skips:
 			for g in doc.skipgrams:
 				if(g[0]==gram[0] and g[1]==gram[1]):
-					score+=1
+					score+= document.IDF(documents, gram[1]) + document.IDF(documents, gram[0])
 		output.append((score,doc.fileName))
 	return output
 	
