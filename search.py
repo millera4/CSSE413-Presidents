@@ -45,9 +45,12 @@ def score_documents(query):
 		merged.append((score,mb25[i][1]))
 	merged = sorted(merged, reverse=True)
 	r = merged[0][0] - merged[len(mb25)-1][0]
+	conf = merged[0][0] - merged[len(mb25)/2][0]
+	if(r!=0):
+		conf =  conf/r
 	for i in range(0,len(mb25)):
-		print merged[i], pow(10,(1+((merged[i][0] - r/2)/(r/2))))
-	return []#merged
+		merged[i] =  (merged[i][0], pow(10,(1+((merged[i][0]- merged[len(mb25)-1][0] - r/2)/(r/2))))*conf,merged[i][1]
+	return merged
 	
 def bm25Score(query):
 	output = []
